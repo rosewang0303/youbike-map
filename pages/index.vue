@@ -4,14 +4,15 @@
     <div ref="map" class="index__map"></div>
     <div class="index__switch-btn-wrap">
       <SwitchBtn  v-model="param.type" class="index__switch-btn"/>
-      <div class="index__position" :class="{'index__position--disabled': !positionDisabled}" @click="getNowPosition()">
+      <button class="index__position" :class="{'index__position--disabled': !positionDisabled}" :disabled="positionDisabled" @click="getNowPosition()">
         <Fa :icon="['fas', 'crosshairs']" />
         <div class="index__position-tooltip-wrap">
           <div class="index__position-triangle"></div>
           <div class="index__position-tooltip">點擊定位</div>
         </div>
-      </div>
+      </button>
     </div>
+    <SearchSidebar class="index__search-sidebar"/>
   </div>
 </template>
 <script>
@@ -84,8 +85,7 @@ export default {
   &__switch-btn-wrap {
     position: absolute;
     top: 36px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 35%;
     display: flex;
     align-items: center;
   }
@@ -110,8 +110,11 @@ export default {
         display: block;
       }
     }
-    &--disabled {
+    &:disabled {
       background-color: $gray-300;
+    }
+    &:focus {
+      border: 3px solid $primary-500;
     }
   }
   &__position-tooltip-wrap {
@@ -142,7 +145,30 @@ export default {
   }
   &__map {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 82px);
   }
+  &__search-sidebar {
+    position: absolute;
+    top: 36px;
+    left: 32px;
+    width: 30%;
+    height: calc(100vh - 154px);
+  }
+}
+@media screen and (max-width: 768px){
+    .index {
+      &__switch-btn-wrap {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      &__search-sidebar {
+        width: 100%;
+        left: 0;
+        top: 50%;
+      }
+    }
+}
+@media screen and (max-width: 576px){
 }
 </style>
