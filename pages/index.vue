@@ -59,21 +59,21 @@ export default {
     // 建立地圖
     initMap() {
       // 透過 Map 物件建構子建立新地圖 map 物件實例，並將地圖呈現在 id 為 map 的元素中
-      this.map = new window.google.maps.Map(this.$refs.map, {
-        mapId: 'c3d33e9acb848309',
-        // 設定地圖的中心點經緯度位置
-        center: { lat: this.nowPosition.lat, lng: this.nowPosition.lng },
-        // 設定地圖縮放比例 0-20
-        zoom: 15,
-        // 限制使用者能縮放地圖的最大比例
-        maxZoom: 20,
-        // 限制使用者能縮放地圖的最小比例
-        minZoom: 3,
-        // 設定是否呈現右下角街景小人
-        streetViewControl: false,
-        // 設定是否讓使用者可以切換地圖樣式：一般、衛星圖等
-        mapTypeControl: false,
-      });
+      // this.map = new window.google.maps.Map(this.$refs.map, {
+      //   mapId: 'c3d33e9acb848309',
+      //   // 設定地圖的中心點經緯度位置
+      //   center: { lat: this.nowPosition.lat, lng: this.nowPosition.lng },
+      //   // 設定地圖縮放比例 0-20
+      //   zoom: 15,
+      //   // 限制使用者能縮放地圖的最大比例
+      //   maxZoom: 20,
+      //   // 限制使用者能縮放地圖的最小比例
+      //   minZoom: 3,
+      //   // 設定是否呈現右下角街景小人
+      //   streetViewControl: false,
+      //   // 設定是否讓使用者可以切換地圖樣式：一般、衛星圖等
+      //   mapTypeControl: false,
+      // });
       this.loading = false;
     },
   }
