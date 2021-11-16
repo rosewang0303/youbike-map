@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+    <Loading v-if="loading"/>
     <div ref="map" class="index__map"></div>
     <div class="index__switch-btn-wrap">
       <SwitchBtn  v-model="param.type" class="index__switch-btn"/>
@@ -17,10 +18,11 @@
 export default {
   data() {
     return {
+      loading: false,
       positionDisabled: false,
       nowPosition: {
-        lat: null,
-        lng: null,
+        lat: 23.973875,
+        lng: 120.982024,
       },
       param: {
         type: 'bicycle'
@@ -36,6 +38,7 @@ export default {
     // 取得目前位置
     getNowPosition() {
       if(navigator.geolocation) {
+        this.loading = true;
         // 跟使用者拿所在位置的權限
         navigator.geolocation.getCurrentPosition(this.getNowPositionResponse, this.getNowPositionError);
       } else {
@@ -45,6 +48,7 @@ export default {
     // 使用者不提供權限，或是發生其它錯誤
     getNowPositionError() {
       console.error('無法取得你的位置');
+      this.initMap()
     },
     // 使用者允許抓目前位置，回傳經緯度
     getNowPositionResponse(position) {
@@ -69,6 +73,7 @@ export default {
         // 設定是否讓使用者可以切換地圖樣式：一般、衛星圖等
         mapTypeControl: false
       });
+      this.loading = false;
     },
   }
 }
