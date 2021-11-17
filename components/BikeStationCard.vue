@@ -4,7 +4,7 @@
             <div class="bike-station-card__name">{{info.StationName.Zh_tw}}</div>
             <div class="bike-station-card__info">
                 <div class="bike-station-card__rent-park" 
-                    :class="{'bike-station-card__rent-park--red': info.AvailableRentBikes <= 5, 'bike-station-card__rent-park--gray': info.AvailableRentBikes == 0}">
+                    :class="{'bike-station-card__rent-park--red': (info.AvailableRentBikes <= 5 && info.AvailableRentBikes != 0), 'bike-station-card__rent-park--gray': info.AvailableRentBikes == 0}">
                     <div class="bike-station-card__info-title">
                         <Fa :icon="['fas', 'bicycle']" />
                         <div>可租借</div>
@@ -12,7 +12,7 @@
                     <div class="bike-station-card__info-count">{{info.AvailableRentBikes}}</div>
                 </div>
                 <div class="bike-station-card__rent-park"
-                    :class="{'bike-station-card__rent-park--red': info.AvailableReturnBikes <= 5, 'bike-station-card__rent-park--gray': info.AvailableReturnBikes == 0}">
+                    :class="{'bike-station-card__rent-park--red': (info.AvailableReturnBikes <= 5 && info.AvailableReturnBikes != 0), 'bike-station-card__rent-park--gray': info.AvailableReturnBikes == 0}">
                     <div class="bike-station-card__info-title">
                         <Fa :icon="['fas', 'parking']" />
                         <div>可停車</div>
@@ -24,7 +24,7 @@
                 <div v-if="info.ServiceStatus == 1" class="bike-station-card__status"
                     :class="{'bike-station-card__status--gray': statusText == '無法借還',
                         'bike-station-card__status--red': statusText == '只可還車' || statusText == '只可借車'}">{{statusText}}</div>
-                <div v-else class="bike-station-card__status">{{info.ServiceStatus==0?'停止營運':'暫停營運'}}</div>
+                <div v-else class="bike-station-card__status bike-station-card__status--gray">{{info.ServiceStatus==0?'停止營運':'暫停營運'}}</div>
                 <div v-if="info.distance" class="bike-station-card__distance">
                     <Fa :icon="['fas', 'map-marker-alt']" />
                     <div>距離{{info.distance}}</div>
@@ -102,6 +102,7 @@ export default {
         &--gray {
             background-color: $gray-200;
             color: $gray-400;
+            border: 1px solid $gray-300;
         }
     }
     &__info {

@@ -82,6 +82,7 @@ export default {
     // 建立地圖
     initMap() {
       this.loading.show = true;
+      this.loading.title = "地圖載入中...";
       // 透過 Map 物件建構子建立新地圖 map 物件實例，並將地圖呈現在 id 為 map 的元素中
       this.map = new window.google.maps.Map(this.$refs.map, {
         mapId: 'c3d33e9acb848309',
@@ -98,9 +99,8 @@ export default {
         // 設定是否讓使用者可以切換地圖樣式：一般、衛星圖等
         mapTypeControl: false,
       });
-      this.loading.title = "地圖載入中...";
-      this.loading.show = false;
-
+      
+      this.loading.title = "資料載入中...";
       if(this.param.city === '') {
         this.fetchBikeStationNearBy();
       }else {
@@ -111,38 +111,47 @@ export default {
     setMarkerList() {
       this.loading.show = true;
       this.loading.title = "站點資料載入中...";
-      for(const key in this.renderList) {
-        const item = this.renderList[key];
-        // 地標
-        const marker = new window.google.maps.Marker({
-          position: {
-            lat: item.StationPosition.PositionLat,
-            lng: item.StationPosition.PositionLon,
-          },
-          icon: this.setMarkerIcon(item),
-          map: this.map,
-        });
-        // 視窗
-        const InfoWindow = Vue.extend(MapInfoWindow);
-        const instance = new InfoWindow({
-            propsData: {
-              info: item,
-            }
-        });
-        instance.$mount();
-        const infoWindow = new window.google.maps.InfoWindow({
-          content: instance.$el,
-        });
-        // 點擊地標打開視窗
-        marker.addListener("click", () => {
-          infoWindow.open({
-            anchor: marker,
+      if(Object.keys(this.renderList).length > 0) {
+        let count = 0;
+        for(const key in this.renderList) {
+          count++;
+          const item = this.renderList[key];
+          // 地標
+          const marker = new window.google.maps.Marker({
+            position: {
+              lat: item.StationPosition.PositionLat,
+              lng: item.StationPosition.PositionLon,
+            },
+            icon: this.setMarkerIcon(item),
             map: this.map,
-            shouldFocus: false,
           });
-        });
+          // 視窗
+          const InfoWindow = Vue.extend(MapInfoWindow);
+          const instance = new InfoWindow({
+              propsData: {
+                info: item,
+              }
+          });
+          instance.$mount();
+          const infoWindow = new window.google.maps.InfoWindow({
+            content: instance.$el,
+          });
+          // 點擊地標打開視窗
+          marker.addListener("click", () => {
+            infoWindow.open({
+              anchor: marker,
+              map: this.map,
+              shouldFocus: false,
+            });
+          });
+
+          if(count === Object.keys(this.renderList).length) {
+            this.loading.show = false;
+          }
+        }
+      }else {
+        this.loading.show = false;
       }
-      this.loading.show = false;
     },
     // 地圖上顯示的地標圖
     setMarkerIcon(item) {
@@ -156,7 +165,7 @@ export default {
         count = item.AvailableReturnBikes;
       }
 
-      if(count <= 5) {
+      if(count <= 5 && count !== 0) {
         obj = {
           url: require('~/assets/icon/bike_marker_red.svg'),
         }
@@ -183,6 +192,9 @@ export default {
       this.map.panTo(latLng);
     },
     goSearch() {
+      this.loading.show = true;
+      this.loading.title = "資料載入中...";
+
       this.stationList = [];
       this.availabilityList = [];
       this.bikeInfoList = {};
@@ -315,6 +327,7 @@ export default {
       }
       this.renderList = this.bikeInfoList;
       this.setMarkerList();
+      this.loading.show = false;
     },
   }
 }

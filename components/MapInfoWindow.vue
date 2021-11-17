@@ -4,12 +4,12 @@
         <div class="map-info-window__info-wrap">
           <div class="map-info-window__status">
             <div class="map-info-window__rent-park"
-                :class="{'map-info-window__rent-park--red': info.AvailableRentBikes <= 5, 'map-info-window__rent-park--gray': info.AvailableRentBikes == 0}">
+                :class="{'map-info-window__rent-park--red': (info.AvailableRentBikes <= 5 && info.AvailableRentBikes != 0), 'map-info-window__rent-park--gray': info.AvailableRentBikes == 0}">
                 <Fa :icon="['fas', 'bicycle']" />
                 <div>{{info.AvailableRentBikes}}</div>
             </div>
             <div class="map-info-window__rent-park" 
-                :class="{'map-info-window__rent-park--red': info.AvailableReturnBikes <= 5, 'map-info-window__rent-park--gray': info.AvailableReturnBikes == 0}">
+                :class="{'map-info-window__rent-park--red': (info.AvailableReturnBikes <= 5 && info.AvailableReturnBikes != 0), 'map-info-window__rent-park--gray': info.AvailableReturnBikes == 0}">
                 <Fa :icon="['fas', 'parking']" />
                 <div>{{info.AvailableReturnBikes}}</div>
             </div>
