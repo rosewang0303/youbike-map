@@ -12,7 +12,7 @@
         </div>
       </button>
     </div>
-    <SearchSidebar class="index__search-sidebar" :bikeInfoList="renderList" @clickCard="setMapCenter"/>
+    <SearchSidebar class="index__search-sidebar" :bikeInfoList="renderList" @clickCard="setMapCenter" @searchKeyword="getSearchCityList"/>
   </div>
 </template>
 <script>
@@ -33,7 +33,8 @@ export default {
         lng: 121.3155,
       },
       param: {
-        type: 'rent'
+        type: 'rent',
+        city: '目前位置',
       },
       map: null,
       stationList: [],
@@ -45,7 +46,6 @@ export default {
   watch: {
     'param.type': {
       handler(val, oldVal) {
-        console.error(val)
         // 重新設定地標
         this.setMarkerList();
       },
@@ -171,14 +171,24 @@ export default {
       this.map.panTo(latLng);
       this.map.setZoom(18);
     },
+    getSearchCityList(keyword) {
+      this.fetchBikeStationNearBy(keyword);
+    },
     getSearchList() {
       this.fetchBikeStationNearBy();
     },
     // api 附近的租借站位資料 1000m內的站點
-    fetchBikeStationNearBy() {
-      const param = {
+    fetchBikeStationNearBy(keyword=null) {
+      let param = {
         '$spatialFilter': `nearby(${this.nowPosition.lat}, ${this.nowPosition.lng}, 1000)`
       }
+      if(keyword) {
+        param = {
+          '$spatialFilter': `nearby(${this.nowPosition.lat}, ${this.nowPosition.lng}, 1000)`,
+          '$filter': `contains('StationName', '${keyword}')`
+        }
+      }
+
       getBikeStationNearBy(param).then(response => {
         this.stationList = response
         // 即時車位

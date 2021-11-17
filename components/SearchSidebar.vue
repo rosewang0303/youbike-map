@@ -1,8 +1,8 @@
 <template>
     <div class="search-sidebar">
         <div class="search-sidebar__input-wrap">
-            <InputText class="search-sidebar__input" placeholder="搜尋站點或鄰近地點" icon="search"/>
-            <DropdownMenu class="search-sidebar__filter"/>
+            <InputText v-model="param.keyword" class="search-sidebar__input" placeholder="搜尋站點或鄰近地點" icon="search" @search="searchKeyword"/>
+            <!-- <DropdownMenu class="search-sidebar__filter"/> -->
         </div>
         <div v-if="bikeInfoList.length == 0" class="search-sidebar__list-empty">查無資料</div>
         <div v-else>
@@ -20,6 +20,9 @@ export default {
     },
     data() {
         return {
+            param: {
+                keyword: null,
+            }
         }
     },
     watch: {
@@ -29,6 +32,9 @@ export default {
     methods: {
         clickStationCard(item) {
             this.$emit("clickCard", item)
+        },
+        searchKeyword(keyword) {
+            this.$emit("searchKeyword", keyword)
         }
     }
 }
@@ -49,10 +55,11 @@ export default {
         margin-bottom: 8px;
     }
     &__input {
-        width: 75%;
+        // width: 75%;
+        width: 100%;
     }
     &__filter {
-        width: 22%;
+        // width: 22%;
     }
     &__list-empty {
         color: $primary-400;

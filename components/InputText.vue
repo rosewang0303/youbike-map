@@ -1,7 +1,7 @@
 <template>
     <div class="input-text">
         <input v-model="syncValue" :type="type" :placeholder="placeholder" :disabled="disabled"/>
-        <Fa v-if="icon == 'search'" class="input-text__icon input-text__icon--search" :icon="['fas', 'search']" />
+        <Fa v-if="icon == 'search'" class="input-text__icon input-text__icon--search" :icon="['fas', 'search']" @click="search()"/>
     </div>
 </template>
 <script>
@@ -42,6 +42,12 @@ export default {
             }
         },
     },
+    methods: {
+        // 搜尋
+        search() {
+            this.$emit('search', this.syncValue)
+        },
+    }
 }
 </script>
 <style lang="scss" scoped>
