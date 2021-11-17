@@ -41,7 +41,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .search-sidebar {
-    width: 100%;
     background: $white;
     box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
     border-radius: 8px;
