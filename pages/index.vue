@@ -38,6 +38,7 @@ export default {
         keyword: '',
       },
       map: null,
+      markers: {},
       stationList: [],
       availabilityList: [],
       bikeInfoList: {},
@@ -47,8 +48,11 @@ export default {
   watch: {
     'param.type': {
       handler(val, oldVal) {
-        // 重新設定地標
-        this.setMarkerList();
+        // 切換地標 樣式
+        for(const key in this.renderList) {
+          const item = this.renderList[key];
+          this.markers[key].setIcon(this.setMarkerIcon(item).url);
+        }
       },
       deep: true,
     },
@@ -125,6 +129,7 @@ export default {
             icon: this.setMarkerIcon(item),
             map: this.map,
           });
+          this.markers[key] = marker;
           // 視窗
           const InfoWindow = Vue.extend(MapInfoWindow);
           const instance = new InfoWindow({
