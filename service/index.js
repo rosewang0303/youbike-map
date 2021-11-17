@@ -3,10 +3,10 @@ import JsSHA from 'jssha';
 
 const APP_ID = "d3fd45c9c5bd4b298f967b59745777f9";
 const APP_KEY = "pcWWHmwwZnFYdO-A0mvrlFXsypk";
-const BASE_URL = "https://ptx.transportdata.tw/MOTC";
+const BASE_URL_V2 = "https://ptx.transportdata.tw/MOTC";
 
 const service = axios.create({
-    baseURL: BASE_URL,
+    baseURL: BASE_URL_V2,
     timeout: 15000 // 請求逾時
 })
 

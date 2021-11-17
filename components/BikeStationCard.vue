@@ -25,7 +25,7 @@
                     :class="{'bike-station-card__status--gray': statusText == '無法借還',
                         'bike-station-card__status--red': statusText == '只可還車' || statusText == '只可借車'}">{{statusText}}</div>
                 <div v-else class="bike-station-card__status">{{info.ServiceStatus==0?'停止營運':'暫停營運'}}</div>
-                <div class="bike-station-card__distance">
+                <div v-if="info.distance" class="bike-station-card__distance">
                     <Fa :icon="['fas', 'map-marker-alt']" />
                     <div>距離{{info.distance}}</div>
                 </div>

@@ -14,7 +14,7 @@
                 <div>{{info.AvailableReturnBikes}}</div>
             </div>
           </div>
-          <div class="map-info-window__distance">
+          <div v-if="info.distance" class="map-info-window__distance">
             <Fa :icon="['fas', 'map-marker-alt']" />
             <div>距離{{info.distance}}</div>
           </div>
