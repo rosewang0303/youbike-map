@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <Loading v-if="loading"/>
+    <Loading v-if="loading.show" :title="loading.title"/>
     <div ref="map" class="index__map"></div>
     <div class="index__switch-btn-wrap">
       <SwitchBtn  v-model="param.type" class="index__switch-btn"/>
@@ -12,24 +12,45 @@
         </div>
       </button>
     </div>
-    <SearchSidebar class="index__search-sidebar"/>
+    <SearchSidebar class="index__search-sidebar" :bikeInfoList="renderList" @clickCard="setMapCenter"/>
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import MapInfoWindow from '~/components/MapInfoWindow'
+import { getBikeStationNearBy, getBikeAvailabilityNearBy } from '~/api/api' 
+
 export default {
   data() {
     return {
-      loading: false,
+      loading: {
+        show: false,
+        title: "Loading..."
+      },
       positionDisabled: false,
       nowPosition: {
-        lat: 23.973875,
-        lng: 120.982024,
+        lat: 25.0252,
+        lng: 121.3155,
       },
       param: {
-        type: 'bicycle'
+        type: 'rent'
       },
       map: null,
+      stationList: [],
+      availabilityList: [],
+      bikeInfoList: {},
+      renderList: {},
     }
+  },
+  watch: {
+    'param.type': {
+      handler(val, oldVal) {
+        console.error(val)
+        // 重新設定地標
+        this.setMarkerList();
+      },
+      deep: true,
+    },
   },
   mounted() {
     // 取得目前位置
@@ -39,10 +60,10 @@ export default {
     // 取得目前位置
     getNowPosition() {
       if(navigator.geolocation) {
-        this.loading = true;
+        this.loading.show = true;
         // 跟使用者拿所在位置的權限
         navigator.geolocation.getCurrentPosition(this.getNowPositionResponse, this.getNowPositionError);
-      } else {
+      }else {
         console.error('裝置不支援地理位置功能')
       }
     },
@@ -60,22 +81,159 @@ export default {
     // 建立地圖
     initMap() {
       // 透過 Map 物件建構子建立新地圖 map 物件實例，並將地圖呈現在 id 為 map 的元素中
-      // this.map = new window.google.maps.Map(this.$refs.map, {
-      //   mapId: 'c3d33e9acb848309',
-      //   // 設定地圖的中心點經緯度位置
-      //   center: { lat: this.nowPosition.lat, lng: this.nowPosition.lng },
-      //   // 設定地圖縮放比例 0-20
-      //   zoom: 15,
-      //   // 限制使用者能縮放地圖的最大比例
-      //   maxZoom: 20,
-      //   // 限制使用者能縮放地圖的最小比例
-      //   minZoom: 3,
-      //   // 設定是否呈現右下角街景小人
-      //   streetViewControl: false,
-      //   // 設定是否讓使用者可以切換地圖樣式：一般、衛星圖等
-      //   mapTypeControl: false,
-      // });
-      this.loading = false;
+      this.map = new window.google.maps.Map(this.$refs.map, {
+        mapId: 'c3d33e9acb848309',
+        // 設定地圖的中心點經緯度位置
+        center: { lat: this.nowPosition.lat, lng: this.nowPosition.lng },
+        // 設定地圖縮放比例 0-20
+        zoom: 15,
+        // 限制使用者能縮放地圖的最大比例
+        maxZoom: 20,
+        // 限制使用者能縮放地圖的最小比例
+        minZoom: 3,
+        // 設定是否呈現右下角街景小人
+        streetViewControl: false,
+        // 設定是否讓使用者可以切換地圖樣式：一般、衛星圖等
+        mapTypeControl: false,
+      });
+      this.loading.title = "地圖載入中...";
+      this.loading.show = false;
+
+      this.getSearchList();
+    },
+    // 顯示地圖 地標 
+    setMarkerList() {
+      this.loading.show = true;
+      this.loading.title = "站點資料載入中...";
+      for(const key in this.renderList) {
+        const item = this.renderList[key];
+        // 地標
+        const marker = new window.google.maps.Marker({
+          position: {
+            lat: item.StationPosition.PositionLat,
+            lng: item.StationPosition.PositionLon,
+          },
+          icon: this.setMarkerIcon(item),
+          map: this.map,
+        });
+        // 視窗
+        const InfoWindow = Vue.extend(MapInfoWindow);
+        const instance = new InfoWindow({
+            propsData: {
+              info: item,
+            }
+        });
+        instance.$mount();
+        const infoWindow = new window.google.maps.InfoWindow({
+          content: instance.$el,
+        });
+        // 點擊地標打開視窗
+        marker.addListener("click", () => {
+          infoWindow.open({
+            anchor: marker,
+            map: this.map,
+            shouldFocus: false,
+          });
+        });
+      }
+      this.loading.show = false;
+    },
+    // 地圖上顯示的地標圖
+    setMarkerIcon(item) {
+      let count = null;
+      let obj = null;
+      if(this.param.type === 'rent'){
+        // 借車
+        count = item.AvailableRentBikes;
+      }else {
+        // 還車
+        count = item.AvailableReturnBikes;
+      }
+
+      if(count <= 5) {
+        obj = {
+          url: require('~/assets/icon/bike_marker_red.svg'),
+        }
+      }else if(count === 0) {
+        obj = {
+          url: require('~/assets/icon/bike_marker_gray.svg'),
+        }
+      }else {
+        obj = {
+          url: require('~/assets/icon/bike_marker_green.svg'),
+        }
+      }
+
+      return obj;
+    },
+    setMapCenter(item) {
+      const latLng = new window.google.maps.LatLng(item.StationPosition.PositionLat, item.StationPosition.PositionLon); 
+      this.map.panTo(latLng);
+      this.map.setZoom(18);
+    },
+    getSearchList() {
+      this.fetchBikeStationNearBy();
+    },
+    // api 附近的租借站位資料 1000m內的站點
+    fetchBikeStationNearBy() {
+      const param = {
+        '$spatialFilter': `nearby(${this.nowPosition.lat}, ${this.nowPosition.lng}, 1000)`
+      }
+      getBikeStationNearBy(param).then(response => {
+        this.stationList = response
+        // 即時車位
+        this.fetchBikeAvailabilityNearBy();
+      });
+    },
+    // api 附近的即時車位 1000m內的站點
+    fetchBikeAvailabilityNearBy() {
+        const param = {
+          '$spatialFilter': `nearby(${this.nowPosition.lat}, ${this.nowPosition.lng}, 1000)`
+        }
+        getBikeAvailabilityNearBy(param).then(response => {
+          this.availabilityList = response
+          // 處理資料
+          const tmpObj = {};
+          if(this.stationList.length === this.availabilityList.length) {
+              for(let i=0; i<this.stationList.length; i++) {
+                  const item = this.stationList[i];
+                  tmpObj[item.StationUID] = item
+              }
+              for(let i=0; i<this.availabilityList.length; i++) {
+                  const item = this.availabilityList[i];
+                  tmpObj[item.StationUID] =  Object.assign({}, tmpObj[item.StationUID], item);
+              }
+          }
+          this.bikeInfoList = tmpObj;
+          this.getDistance()
+        });
+    },
+    getDistance() {
+      const origins = new window.google.maps.LatLng(this.nowPosition.lat, this.nowPosition.lng);
+      const destinationArr = [];
+      for(const key in this.bikeInfoList) {
+        const item = this.bikeInfoList[key];
+        const latlng = new window.google.maps.LatLng(item.StationPosition.PositionLat, item.StationPosition.PositionLon);
+        destinationArr.push(latlng)
+      }
+      const service = new window.google.maps.DistanceMatrixService();
+      service.getDistanceMatrix(
+      {
+        origins: [origins],
+        destinations: destinationArr,
+        travelMode: 'BICYCLING',
+      }, this.getDistanceHandler);
+    },
+    getDistanceHandler(response, status) {
+      const distance = response.rows[0];
+      let index = 0;
+      for(const key in this.bikeInfoList) {
+        const item = this.bikeInfoList[key];
+        item.distance = distance.elements[index].distance.text;
+        index++;
+      }
+      this.renderList = this.bikeInfoList;
+      this.setMarkerList();
     },
   }
 }

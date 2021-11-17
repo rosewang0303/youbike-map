@@ -1,28 +1,33 @@
 <template>
-    <div class="bike-station-card">
-        <div class="bike-station-card__wrap">
-            <div class="bike-station-card__name">捷運臺大醫院站 (四號出口)</div>
+    <div class="bike-station-card" @click="clickStationCard()">
+        <div v-if="info" class="bike-station-card__wrap">
+            <div class="bike-station-card__name">{{info.StationName.Zh_tw}}</div>
             <div class="bike-station-card__info">
-                <div class="bike-station-card__rent">
+                <div class="bike-station-card__rent-park" 
+                    :class="{'bike-station-card__rent-park--red': info.AvailableRentBikes <= 5, 'bike-station-card__rent-park--gray': info.AvailableRentBikes == 0}">
                     <div class="bike-station-card__info-title">
                         <Fa :icon="['fas', 'bicycle']" />
                         <div>可租借</div>
                     </div>
-                    <div class="bike-station-card__info-count">40</div>
+                    <div class="bike-station-card__info-count">{{info.AvailableRentBikes}}</div>
                 </div>
-                <div class="bike-station-card__park">
+                <div class="bike-station-card__rent-park"
+                    :class="{'bike-station-card__rent-park--red': info.AvailableReturnBikes <= 5, 'bike-station-card__rent-park--gray': info.AvailableReturnBikes == 0}">
                     <div class="bike-station-card__info-title">
                         <Fa :icon="['fas', 'parking']" />
                         <div>可停車</div>
                     </div>
-                    <div class="bike-station-card__info-count">50</div>
+                    <div class="bike-station-card__info-count">{{info.AvailableReturnBikes}}</div>
                 </div>
             </div>
             <div class="bike-station-card__note">
-                <div class="bike-station-card__status">可借可還</div>
+                <div v-if="info.ServiceStatus == 1" class="bike-station-card__status"
+                    :class="{'bike-station-card__status--gray': statusText == '無法借還',
+                        'bike-station-card__status--red': statusText == '只可還車' || statusText == '只可借車'}">{{statusText}}</div>
+                <div v-else class="bike-station-card__status">{{info.ServiceStatus==0?'停止營運':'暫停營運'}}</div>
                 <div class="bike-station-card__distance">
                     <Fa :icon="['fas', 'map-marker-alt']" />
-                    <div>距離25公尺</div>
+                    <div>距離{{info.distance}}</div>
                 </div>
             </div>
         </div>
@@ -30,14 +35,42 @@
 </template>
 <script>
 export default {
+    props: {
+        info: {
+            type: Object,
+            default: () => { return {} }
+        },
+    },
+    computed: {
+        statusText() {
+            if(this.info.AvailableRentBikes > 0 && this.info.AvailableReturnBikes > 0) {
+                return '可借可還'
+            }else if(this.info.AvailableRentBikes <= 0 && this.info.AvailableReturnBikes > 0) {
+                return '只可還車'
+            }else if(this.info.AvailableRentBikes > 0 && this.info.AvailableReturnBikes <= 0) {
+                return '只可借車'
+            }else {
+                return '無法借還'
+            }
+        }
+    },
+    methods: {
+        clickStationCard() {
+            this.$emit("clickStationCard", this.info)
+        }
+    }
 }
 </script>
 <style lang="scss" scoped>
 .bike-station-card {
-    padding: 20px 0;
-    border-bottom: 1px solid $gray-300;
+    cursor: pointer;
+    padding: 0 32px;
+    &:hover {
+        background-color: $gray-200;
+    }
     &__wrap {
-
+        padding: 20px 0;
+        border-bottom: 1px solid $gray-300;
     }
     &__name {
         font-weight: bold;
@@ -55,8 +88,7 @@ export default {
         align-items: center;
         justify-content: space-between;
     }
-    &__rent,  
-    &__park {
+    &__rent-park {
         width: 47%;
         text-align: center;
         background-color: $primary-100;

@@ -42,10 +42,10 @@ export default {
         changeValue(type) {
             if(type === 'left') {
                 this.switchLeft = true;
-                this.syncValue = 'bicycle'
+                this.syncValue = 'rent'
             }else {
                 this.switchLeft = false;
-                this.syncValue = 'parking'
+                this.syncValue = 'park'
             }
         }
     },

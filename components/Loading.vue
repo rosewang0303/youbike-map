@@ -1,8 +1,18 @@
 <template>
     <div class="loading">
-        <div class="loading__wrap">Loading...</div>
+        <div class="loading__wrap">{{title}}</div>
     </div>
 </template>
+<script>
+export default {
+    props: {
+        title: {
+            type: String,
+            default: 'Loading...'
+        },
+    }
+}
+</script>
 <style lang="scss" scoped>
     .loading {
         position: fixed;
