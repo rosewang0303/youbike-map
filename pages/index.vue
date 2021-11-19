@@ -452,11 +452,18 @@ export default {
 }
 @media screen and (max-width: 768px){
     .index {
+      &__map {
+        height: 70vh;
+      }
+      &__search-sidebar {
+        height: calc(100vh - 45%);
+      }
       &__arrow {
         display: block;
       }
       &__switch-btn-wrap {
         position: absolute;
+        top: 12px;
         left: 50%;
         right: unset;
         transform: translateX(-50%);
@@ -471,6 +478,14 @@ export default {
           top: 20%;
           height: 80%;
         }
+      }
+      &__position-tooltip-wrap {
+        top: 52px;
+      }
+      &__position {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
       }
     }
 }

@@ -105,4 +105,24 @@ export default {
         margin-right: 8px;
     }
 }
+@media screen and (max-width: 768px){
+    .switch-btn {
+        &__wrap {
+            width: 200px;
+            height: 36px;
+            padding: 4px 6px;
+        }
+        &__item {
+            width: 92px;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 20px;
+            padding: 4px 12px;
+        }
+        &__checked-bg {
+            width: 92px;
+            height: 28px;
+        }
+    }
+}
 </style>
