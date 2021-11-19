@@ -103,7 +103,7 @@ export default {
 }
 @media screen and (max-width: 768px){
     .search-sidebar {
-        
+        box-shadow: 0px -2px 4px rgba(118, 118, 118, 0.3);
     }
 }
 @media screen and (max-width: 576px){

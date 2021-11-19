@@ -12,7 +12,12 @@
         </div>
       </button>
     </div>
-    <SearchSidebar v-model="param" class="index__search-sidebar" :list="renderList" @clickCard="setMapCenterZoom" @goSearch="goSearch"/>
+    <div class="index__search-sidebar-wrap" :class="{'index__search-sidebar-wrap--up': sidebarUp}" @click="sidebarUp = !sidebarUp">
+      <div class="index__arrow" :class="{'index__arrow--up': sidebarUp}">
+          <img src="~assets/icon/arrow_up.svg"/>
+      </div>
+      <SearchSidebar v-model="param" class="index__search-sidebar" :list="renderList" @clickCard="setMapCenterZoom" @goSearch="goSearch"/>
+    </div>
   </div>
 </template>
 <script>
@@ -32,6 +37,7 @@ export default {
         lat: 25.0252,
         lng: 121.3155,
       },
+      sidebarUp: false,
       param: {
         type: 'rent',
         city: '',
@@ -405,11 +411,34 @@ export default {
     height: calc(100vh - 82px);
   }
   &__search-sidebar {
+    height: calc(100vh - 154px);
+    width: 100%;
+  }
+  &__search-sidebar-wrap {
     position: absolute;
     top: 36px;
     left: 32px;
     width: 30%;
-    height: calc(100vh - 154px);
+  }
+  &__arrow {
+    display: none;
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $white;
+    box-shadow: 0px -2px 4px rgba(118, 118, 118, 0.3);
+    border-radius: 6px 6px 0px 0px;
+    text-align: center;
+    padding: 2px 36px;
+    img {
+        transition: 0.5s all ease;
+    }
+    &--up {
+        img {
+            transform: rotate(180deg);
+        }
+    }
   }
 }
 @media screen and (max-width: 992px){
@@ -419,23 +448,29 @@ export default {
       right: 32px;
       left: unset;
     }
-    &__search-sidebar {
-      width: 40%;
-    }
   }
 }
 @media screen and (max-width: 768px){
     .index {
+      &__arrow {
+        display: block;
+      }
       &__switch-btn-wrap {
         position: absolute;
         left: 50%;
         right: unset;
         transform: translateX(-50%);
       }
-      &__search-sidebar {
+      &__search-sidebar-wrap {
         width: 100%;
+        transition: 0.5s all ease;
         left: 0;
-        top: 50%;
+        top: 60%;
+        height: 40%;
+        &--up {
+          top: 20%;
+          height: 80%;
+        }
       }
     }
 }

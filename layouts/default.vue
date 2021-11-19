@@ -55,4 +55,14 @@ input, button {
     color: $black;
     background-color: $white;
 }
+@media screen and (max-width: 768px){
+    .layout-default {
+        height: 100vh;
+        overflow: hidden;
+    }
+}
+@media screen and (max-width: 576px){
+    .layout-default {
+    }
+}
 </style>
