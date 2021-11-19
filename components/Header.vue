@@ -87,6 +87,9 @@ export default {
     &__icon {
         margin-right: 4px;
     }
+    &__menu {
+        display: none;
+    }
     &__menu-icon {
         display: none;
     }
