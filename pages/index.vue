@@ -83,6 +83,7 @@ export default {
         for(const key in this.renderList) {
           const item = this.renderList[key];
           this.markers[key].setIcon(this.setMarkerIcon(item).url);
+          this.markers[key].setLabel(this.setMarkerLabel(item));
         }
       },
       deep: true,
@@ -154,7 +155,7 @@ export default {
           lng: this.nowPosition.lng,
         },
         icon: {
-          url: require('~/assets/icon/user_position.svg')
+          url: require('~/assets/icon/user_position.svg'),
         },
         map: this.map,
       });
@@ -170,6 +171,7 @@ export default {
         for(const key in this.renderList) {
           count++;
           const item = this.renderList[key];
+          
           // 地標
           const marker = new window.google.maps.Marker({
             position: {
@@ -177,6 +179,8 @@ export default {
               lng: item.StationPosition.PositionLon,
             },
             icon: this.setMarkerIcon(item),
+            label: this.setMarkerLabel(item),
+            
             map: this.map,
           });
           this.markers[key] = marker;
@@ -208,6 +212,34 @@ export default {
         this.loading.show = false;
       }
     },
+    // 地圖上顯示 數字
+    setMarkerLabel(item) {
+      let count = null;
+      let obj = null;
+      if(this.param.type === 'rent'){
+        // 借車
+        count = item.AvailableRentBikes;
+      }else {
+        // 還車
+        count = item.AvailableReturnBikes;
+      }
+
+      obj = {
+        text: count.toString(),
+        fontWeight: 'bold',
+        fontSize: '20px',
+        color: null
+      }
+      if(count <= 5 && count !== 0) {
+        obj.color = "#E75578"
+      }else if(count === 0) {
+        obj.color = "#9A9A9A"
+      }else {
+        obj.color = "#738047"
+      }
+
+      return obj;
+    },
     // 地圖上顯示的地標圖
     setMarkerIcon(item) {
       let count = null;
@@ -220,18 +252,15 @@ export default {
         count = item.AvailableReturnBikes;
       }
 
+      obj = {
+        url: null,
+      }
       if(count <= 5 && count !== 0) {
-        obj = {
-          url: require('~/assets/icon/bike_marker_red.svg'),
-        }
+        obj.url = require('~/assets/icon/bike_marker_red.svg')
       }else if(count === 0) {
-        obj = {
-          url: require('~/assets/icon/bike_marker_gray.svg'),
-        }
+        obj.url = require('~/assets/icon/bike_marker_gray.svg')
       }else {
-        obj = {
-          url: require('~/assets/icon/bike_marker_green.svg'),
-        }
+        obj.url = require('~/assets/icon/bike_marker_green.svg')
       }
 
       return obj;
