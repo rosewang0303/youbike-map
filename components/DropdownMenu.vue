@@ -84,7 +84,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dropdown-menu {
-    width: 100%;
     position: relative;
     z-index: 1;
     &__selected {
