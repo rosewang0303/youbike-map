@@ -82,7 +82,7 @@ export default {
         // 切換地標 樣式
         for(const key in this.renderList) {
           const item = this.renderList[key];
-          this.markers[key].setIcon(this.setMarkerIcon(item).url);
+          this.markers[key].setIcon(this.setMarkerIcon(item));
           this.markers[key].setLabel(this.setMarkerLabel(item));
         }
       },
@@ -254,6 +254,7 @@ export default {
 
       obj = {
         url: null,
+        labelOrigin: new window.google.maps.Point(28, 30)
       }
       if(count <= 5 && count !== 0) {
         obj.url = require('~/assets/icon/bike_marker_red.svg')
