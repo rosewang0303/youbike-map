@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       loading: {
-        show: false,
+        show: true,
         title: "Loading..."
       },
       positionDisabled: false,
@@ -65,8 +65,9 @@ export default {
     ],
       map: null,
       markers: [],
+      path: null,
+      paths: [],
       routeList: [],
-      pathArr: [],
     }
   },
   watch: {
@@ -141,9 +142,15 @@ export default {
       console.log(marker);
       this.loading.show = false;
     },
-    deleteMarker() {
-        this.markers.forEach(function(e) {
-            e.setMap(null);
+    // 刪除 地標路線
+    deleteMarkerPath() {
+        this.paths.forEach(function(path) {
+            path.setMap(null);
+        });
+        this.paths = [];
+
+        this.markers.forEach(function(marker) {
+            marker.setMap(null);
         });
         this.markers = [];
     },
@@ -172,14 +179,14 @@ export default {
         this.loading.show = true;
         this.loading.title = "路線資料載入中...";
 
+        this.deleteMarkerPath();
+
         this.map.setZoom(16);
-        this.deleteMarker();
-        
         const routeLatLon = item.Geometry.toString().replaceAll(`MULTILINESTRING ((`,'').replaceAll(`))`,'').replaceAll(`(`,'').replaceAll(`)`,'').split(',')
 
+        const pathArr = [];
         for(let i=0; i<routeLatLon.length; i++) {
             const arr = routeLatLon[i].split(" ");
-           
             const lat = parseFloat(arr[1]);
             const lng = parseFloat(arr[0]);
             const latLng = new window.google.maps.LatLng(lat, lng); 
@@ -191,16 +198,16 @@ export default {
             if(i === routeLatLon.length-1) {
                 this.setMarker(lat, lng)
             }
-
-            this.pathArr.push(latLng);
+            pathArr.push(latLng);
         }
 
         const path = new window.google.maps.Polyline({
-            path: this.pathArr,
+            path: pathArr,
             strokeColor: '#E75578',
             strokeOpacity: 1,
             strokeWeight: 7
         });
+        this.paths.push(path)
         path.setMap(this.map);
 
         this.loading.show = false;
@@ -214,18 +221,19 @@ export default {
     },
     // api 縣市 自行車路線
     fetchCyclingShapenByCity() {
-      let param = ""
-      if(this.param.keyword) {
-        param = {
-          '$filter': `contains('RouteName', '${this.param.keyword}')`
+        this.loading.title = "資料搜尋中...";
+        let param = ""
+        if(this.param.keyword) {
+            param = {
+            '$filter': `contains('RouteName', '${this.param.keyword}')`
+            }
         }
-      }
 
-      getCyclingShapenByCity(this.param.city, param).then(response => {
-        this.routeList = response
+        getCyclingShapenByCity(this.param.city, param).then(response => {
+            this.routeList = response
 
-        this.loading.show = false;
-      });
+            this.loading.show = false;
+        });
     },
     // getDistance() {
     //   let origins = null;
