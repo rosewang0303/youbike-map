@@ -111,11 +111,30 @@ export default {
       });
       
       this.loading.title = "資料載入中...";
+      this.setNowMarker();
       if(this.param.city === '') {
         this.fetchBikeStationNearBy();
       }else {
         this.fetchBikeStationByCity();
       }
+    },
+    // 顯示現在位置 
+    setNowMarker() {
+      this.loading.show = true;
+      this.loading.title = "目前位置載入中...";
+
+      const marker = new window.google.maps.Marker({
+        position: {
+          lat: this.nowPosition.lat,
+          lng: this.nowPosition.lng,
+        },
+        icon: {
+          url: require('~/assets/icon/user_position.svg')
+        },
+        map: this.map,
+      });
+      console.log(marker);
+      this.loading.show = false;
     },
     // 顯示地圖 地標 
     setMarkerList() {
