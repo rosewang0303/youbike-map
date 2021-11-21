@@ -1,5 +1,5 @@
 <template>
-    <div class="bike-station-card" @click="clickStationCard()">
+    <div class="bike-station-card" @click="clickCard()">
         <div v-if="info" class="bike-station-card__wrap">
             <div class="bike-station-card__name">{{info.StationName.Zh_tw}}</div>
             <div class="bike-station-card__info">
@@ -55,8 +55,8 @@ export default {
         }
     },
     methods: {
-        clickStationCard() {
-            this.$emit("clickStationCard", this.info)
+        clickCard() {
+            this.$emit("clickCard", this.info)
         }
     }
 }
@@ -87,6 +87,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 12px;
     }
     &__rent-park {
         width: 47%;
@@ -104,9 +105,6 @@ export default {
             color: $gray-400;
             border: 1px solid $gray-300;
         }
-    }
-    &__info {
-        margin-bottom: 12px;
     }
     &__info-title {
         display: flex;

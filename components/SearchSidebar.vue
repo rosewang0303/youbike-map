@@ -5,8 +5,11 @@
             <DropdownMenu v-model="syncValue.city" class="search-sidebar__filter" :options="optionList"/>
         </div>
         <div v-if="list.length == 0" class="search-sidebar__list-empty">查無資料</div>
+        <div v-else-if="type =='station'">
+            <BikeStationCard v-for="(item, index) in list" :key="index" :info="item" @clickCard="clickCard"/>
+        </div>
         <div v-else>
-            <BikeStationCard v-for="(item, index) in list" :key="index" :info="item" @clickStationCard="clickStationCard"/>
+            <BikeRouteCard v-for="(item, index) in list" :key="index" :info="item" @clickCard="clickCard"/>
         </div>
     </div>
 </template>
@@ -18,37 +21,20 @@ export default {
             default: () => { return {} }
         },
         list: {
-            type: Object,
-            default: () => { return {} }
+            type: Array,
+            default: () => { return [] }
+        },
+        optionList: {
+            type: Array,
+            default: () => { return [] }
+        },
+        type: {
+            type: String,
+            default: 'station',
         },
     },
     data() {
         return {
-            optionList: [
-                {title:"目前位置",value:""},
-                {title:"臺北市",value:"Taipei"},
-                {title:"新北市",value:"NewTaipei"},
-                {title:"桃園市",value:"Taoyuan"},
-                {title:"臺中市",value:"Taichung"},
-                {title:"臺南市",value:"Tainan"},
-                {title:"高雄市",value:"Kaohsiung"},
-                {title:"基隆市",value:"Keelung"},
-                {title:"新竹市",value:"Hsinchu"},
-                {title:"新竹縣",value:"HsinchuCounty"},
-                {title:"苗栗縣",value:"MiaoliCounty"},
-                {title:"彰化縣",value:"ChanghuaCounty"},
-                {title:"南投縣",value:"NantouCounty"},
-                {title:"雲林縣",value:"YunlinCounty"},
-                {title:"嘉義縣",value:"ChiayiCounty"},
-                {title:"嘉義市",value:"Chiayi"},
-                {title:"屏東縣",value:"PingtungCounty"},
-                {title:"宜蘭縣",value:"YilanCounty"},
-                {title:"花蓮縣",value:"HualienCounty"},
-                {title:"臺東縣",value:"TaitungCounty"},
-                {title:"金門縣",value:"KinmenCounty"},
-                {title:"澎湖縣",value:"PenghuCounty"},
-                {title:"連江縣",value:"LienchiangCounty"},
-            ],
         }
     },
     computed: {
@@ -65,7 +51,7 @@ export default {
 
     },
     methods: {
-        clickStationCard(item) {
+        clickCard(item) {
             this.$emit("clickCard", item)
         },
         goSearch() {

@@ -12,11 +12,11 @@
         </div>
       </button>
     </div>
-    <div class="index__search-sidebar-wrap" :class="{'index__search-sidebar-wrap--up': sidebarUp}" @click="sidebarUp = !sidebarUp">
-      <div class="index__arrow" :class="{'index__arrow--up': sidebarUp}">
+    <div class="index__search-sidebar-wrap" :class="{'index__search-sidebar-wrap--up': sidebarUp}">
+      <div class="index__arrow" :class="{'index__arrow--up': sidebarUp}" @click="sidebarUp = !sidebarUp">
           <img src="~assets/icon/arrow_up.svg"/>
       </div>
-      <SearchSidebar v-model="param" class="index__search-sidebar" :list="renderList" @clickCard="setMapCenterZoom" @goSearch="goSearch"/>
+      <SearchSidebar v-model="param" class="index__search-sidebar" :list="renderList" @clickCard="setMapCenterZoom" @goSearch="goSearch" :optionList="optionList"/>
     </div>
   </div>
 </template>
@@ -43,6 +43,31 @@ export default {
         city: '',
         keyword: '',
       },
+      optionList: [
+        {title:"目前位置",value:""},
+        {title:"臺北市",value:"Taipei"},
+        {title:"新北市",value:"NewTaipei"},
+        {title:"桃園市",value:"Taoyuan"},
+        {title:"臺中市",value:"Taichung"},
+        {title:"臺南市",value:"Tainan"},
+        {title:"高雄市",value:"Kaohsiung"},
+        {title:"基隆市",value:"Keelung"},
+        {title:"新竹市",value:"Hsinchu"},
+        {title:"新竹縣",value:"HsinchuCounty"},
+        {title:"苗栗縣",value:"MiaoliCounty"},
+        {title:"彰化縣",value:"ChanghuaCounty"},
+        {title:"南投縣",value:"NantouCounty"},
+        {title:"雲林縣",value:"YunlinCounty"},
+        {title:"嘉義縣",value:"ChiayiCounty"},
+        {title:"嘉義市",value:"Chiayi"},
+        {title:"屏東縣",value:"PingtungCounty"},
+        {title:"宜蘭縣",value:"YilanCounty"},
+        {title:"花蓮縣",value:"HualienCounty"},
+        {title:"臺東縣",value:"TaitungCounty"},
+        {title:"金門縣",value:"KinmenCounty"},
+        {title:"澎湖縣",value:"PenghuCounty"},
+        {title:"連江縣",value:"LienchiangCounty"},
+      ],
       map: null,
       markers: {},
       stationList: [],
@@ -491,8 +516,8 @@ export default {
         width: 100%;
         transition: 0.5s all ease;
         left: 0;
-        top: 60%;
-        height: 40%;
+        top: 80%;
+        height: 20%;
         &--up {
           top: 20%;
           height: 80%;
