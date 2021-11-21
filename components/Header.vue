@@ -22,11 +22,6 @@
                                         </button>
                                     </nuxt-link>
                                 </li>
-                                <li class="header__item">
-                                    <button class="btn">
-                                        <Fa class="header__icon" :icon="['fas', 'umbrella-beach']" />找景點
-                                    </button>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -34,21 +29,17 @@
             </div>
         </div>
         <ul v-if="openMenu" class="header__menu">
-            <li class="header__item">
+            <li class="header__item" @click="openMenu = !openMenu">
                 <nuxt-link :to="{name: 'index'}">
                     <Fa class="header__icon" :icon="['fas', 'bicycle']" />
                     <div>找單車</div>
                 </nuxt-link>
             </li>
-            <li class="header__item">
+            <li class="header__item" @click="openMenu = !openMenu">
                 <nuxt-link :to="{name: 'route'}">
                     <Fa class="header__icon" :icon="['fas', 'route']" />
                     <div>找路線</div>
                 </nuxt-link>
-            </li>
-            <li class="header__item">
-                <Fa class="header__icon" :icon="['fas', 'umbrella-beach']" />
-                <div>找景點</div>
             </li>
         </ul>
     </nav>
@@ -125,10 +116,9 @@ export default {
             letter-spacing: 0.03em;
             color: $primary-400;
             text-align: center;
-            width: 33%;
+            width: 50%;
             &:nth-child(2) {
                 border-left: 1px solid $primary-300;
-                border-right: 1px solid $primary-300;
             }
         }
         a {
