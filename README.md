@@ -20,12 +20,12 @@ $ yarn generate
 ```
 
 ## 資料夾說明
-* api: api設定
-* assets: icon圖/共用css樣式
-* layouts: 共用layout（header）
-* pages: 網站頁面
-* service: axios設定 request response
-* static: 靜態檔
+* api：api設定
+* assets：icon圖/共用css樣式
+* layouts：共用layout（header）
+* pages：網站頁面
+* service：axios設定 request response
+* static：靜態檔
 
 
 ## 使用技術
