@@ -22,6 +22,7 @@ $ yarn generate
 ## 資料夾說明
 * api：api設定
 * assets：icon圖/共用css樣式
+* components：元件
 * layouts：共用layout（header）
 * pages：網站頁面
 * service：axios設定 request response
@@ -36,6 +37,7 @@ $ yarn generate
 
 
 ## 第三方服務
-* google map api - Distance Matrix API
 * google map api - Maps JavaScript API
+* google map api - Distance Matrix API
+* TDX api v2
 
