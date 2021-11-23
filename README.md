@@ -3,6 +3,8 @@
 ## 作品說明
 查詢全台自行車車位資訊、和路線資訊，並在google地圖上顯示。
 
+上週寫Vue，這週改用Nuxt.js Vue的SSR框架，使用google Map api提供的服務，有用到地圖呈現Maps JavaScript API，Distance Matrix API計算距離，以及自訂地圖樣式。
+
 ## 系統說明
 ```bash
 # install dependencies
