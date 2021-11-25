@@ -296,7 +296,7 @@ export default {
       let param = {}
       if(this.param.keyword) {
         param = {
-          '$filter': `contains('StationName', '${this.param.keyword}')`
+          '$filter': `contains(StationName/Zh_tw, '${this.param.keyword}')`
         }
       }
       getBikeStationByCity(this.param.city, param).then(response => {
@@ -310,25 +310,28 @@ export default {
         let param = { }
         if(this.param.keyword) {
           param = {
-            '$filter': `contains('StationName', '${this.param.keyword}')`
+            // '$filter': `contains(StationName/Zh_tw, '${this.param.keyword}')`
           }
         }
         getBikeAvailabilityByCity(this.param.city, param).then(response => {
           this.availabilityList = response
           // 處理資料
           const tmpObj = {};
-          if(this.stationList.length === this.availabilityList.length) {
+          if(this.stationList.length > 0 &&  this.availabilityList.length > 0) {
               for(let i=0; i<this.stationList.length; i++) {
                   const item = this.stationList[i];
                   tmpObj[item.StationUID] = item
               }
               for(let i=0; i<this.availabilityList.length; i++) {
                   const item = this.availabilityList[i];
-                  tmpObj[item.StationUID] =  Object.assign({}, tmpObj[item.StationUID], item);
+                  if (item.StationUID in tmpObj) {
+                    tmpObj[item.StationUID] =  Object.assign({}, tmpObj[item.StationUID], item);
+                  }
               }
           }
           this.bikeInfoList = tmpObj;
           this.getDistance()
+          this.loading.show = false;
         });
     },
     // api 目前位置 附近的租借站位資料 1000m內的站點
@@ -339,11 +342,12 @@ export default {
       if(this.param.keyword) {
         param = {
           '$spatialFilter': `nearby(${this.nowPosition.lat}, ${this.nowPosition.lng}, 1000)`,
-          '$filter': `contains('StationName', '${this.param.keyword}')`
+          '$filter': `contains(StationName/Zh_tw, '${this.param.keyword}')`
         }
       }
 
       getBikeStationNearBy(param).then(response => {
+        this.loading.show = false;
         this.stationList = response
         // 即時車位
         this.fetchBikeAvailabilityNearBy();
@@ -357,25 +361,28 @@ export default {
         if(this.param.keyword) {
           param = {
             '$spatialFilter': `nearby(${this.nowPosition.lat}, ${this.nowPosition.lng}, 1000)`,
-            '$filter': `contains('StationName', '${this.param.keyword}')`
+            // '$filter': `contains(StationName/Zh_tw, '${this.param.keyword}')`
           }
         }
         getBikeAvailabilityNearBy(param).then(response => {
           this.availabilityList = response
           // 處理資料
           const tmpObj = {};
-          if(this.stationList.length === this.availabilityList.length) {
+          if(this.stationList.length > 0 &&  this.availabilityList.length > 0) {
               for(let i=0; i<this.stationList.length; i++) {
                   const item = this.stationList[i];
                   tmpObj[item.StationUID] = item
               }
               for(let i=0; i<this.availabilityList.length; i++) {
                   const item = this.availabilityList[i];
-                  tmpObj[item.StationUID] =  Object.assign({}, tmpObj[item.StationUID], item);
+                  if (item.StationUID in tmpObj) {
+                    tmpObj[item.StationUID] =  Object.assign({}, tmpObj[item.StationUID], item);
+                  }
               }
           }
           this.bikeInfoList = tmpObj;
           this.getDistance()
+          this.loading.show = false;
         });
     },
     getDistance() {

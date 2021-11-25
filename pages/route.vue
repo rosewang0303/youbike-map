@@ -225,7 +225,7 @@ export default {
         let param = ""
         if(this.param.keyword) {
             param = {
-            '$filter': `contains('RouteName', '${this.param.keyword}')`
+            '$filter': `contains(RouteName, '${this.param.keyword}')`
             }
         }
 
