@@ -5,6 +5,8 @@
 
 上週寫Vue，這週改用Nuxt.js Vue的SSR框架，使用google Map api提供的服務，有用到地圖呈現Maps JavaScript API，Distance Matrix API計算距離，以及自訂地圖樣式。
 
+Demo：[https://thef2e-2021-week02.netlify.app/](https://thef2e-2021-week02.netlify.app/)
+
 ## 系統說明
 ```bash
 # install dependencies
