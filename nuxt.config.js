@@ -16,9 +16,13 @@ export default {
       // google font外部引入字體
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'}
     ],
-    // script: [
-    //   { src: `https://maps.googleapis.com/maps/api/js?key=${googleMapApiKey}&libraries=places` }
-    // ]
+    script: [
+      {
+        src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+        'data-ad-client': 'ca-pub-4994371460631840',
+        async: true,
+      }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
